@@ -11,8 +11,8 @@ interface Props {
 }
 
 export default function NavBar({ member }: Props) {
-  async function handleLogout() {
-    await fetch('/api/auth/logout', { method: 'POST' })
+  function handleLogout() {
+    fetch('/api/auth/logout', { method: 'POST' })
     window.location.href = '/login'
   }
 
