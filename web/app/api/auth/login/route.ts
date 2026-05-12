@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
   const isNumber = /^\d+$/.test(identifier)
   const { data: member, error: lookupError } = await service
     .from('members')
-    .select('id, email, is_active')
+    .select('id, email, suspended')
     .eq(isNumber ? 'member_number' : 'login_name', identifier)
     .single()
 
@@ -28,8 +28,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid member number or login name' }, { status: 401 })
   }
 
-  if (!member.is_active) {
-    return NextResponse.json({ error: 'This account is inactive' }, { status: 403 })
+  if (member.suspended) {
+    return NextResponse.json({ error: 'This account has been suspended' }, { status: 403 })
   }
 
   // Authenticate via Supabase Auth using email + PIN as password

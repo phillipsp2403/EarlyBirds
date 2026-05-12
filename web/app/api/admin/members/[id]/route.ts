@@ -20,7 +20,7 @@ export async function PATCH(
   const body = await request.json()
   const {
     first_name, last_name, email, phone, alt_phone,
-    access_level, status, is_active, committee, does_not_book, joined,
+    access_level, status, suspended, committee, does_not_book, joined,
   } = body
 
   const service = await createServiceClient()
@@ -36,7 +36,7 @@ export async function PATCH(
       alt_phone: alt_phone || null,
       access_level,
       status,
-      is_active,
+      suspended,
       committee,
       does_not_book,
       joined,

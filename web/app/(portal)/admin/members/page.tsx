@@ -6,7 +6,7 @@ import MemberSearch from './MemberSearch'
 export default async function AdminMembersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; active?: string }>
+  searchParams: Promise<{ q?: string; suspended?: string }>
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -20,10 +20,10 @@ export default async function AdminMembersPage({
 
   if (currentMember?.access_level !== 'admin') redirect('/dashboard')
 
-  const { q, active } = await searchParams
+  const { q, suspended } = await searchParams
   let query = supabase
     .from('members')
-    .select('id, member_number, login_name, first_name, last_name, email, access_level, is_active, games_played')
+    .select('id, member_number, login_name, first_name, last_name, email, access_level, suspended, games_played')
     .order('last_name')
 
   if (q) {
@@ -31,8 +31,8 @@ export default async function AdminMembersPage({
       `first_name.ilike.%${q}%,last_name.ilike.%${q}%,login_name.ilike.%${q}%,member_number.ilike.%${q}%`
     )
   }
-  if (active === 'true') query = query.eq('is_active', true)
-  if (active === 'false') query = query.eq('is_active', false)
+  if (suspended === 'true') query = query.eq('suspended', true)
+  if (suspended === 'false') query = query.eq('suspended', false)
 
   const { data: members } = await query
 
@@ -48,7 +48,7 @@ export default async function AdminMembersPage({
         </Link>
       </div>
 
-      <MemberSearch initialQ={q} initialActive={active} />
+      <MemberSearch initialQ={q} initialSuspended={suspended} />
 
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
         <table className="w-full text-sm">
@@ -82,10 +82,10 @@ export default async function AdminMembersPage({
                 </td>
                 <td className="px-4 py-3 text-gray-600">{m.games_played}</td>
                 <td className="px-4 py-3">
-                  {m.is_active ? (
-                    <span className="text-xs text-green-600">Active</span>
+                  {m.suspended ? (
+                    <span className="text-xs text-red-500">Suspended</span>
                   ) : (
-                    <span className="text-xs text-red-500">Inactive</span>
+                    <span className="text-xs text-green-600">Active</span>
                   )}
                 </td>
                 <td className="px-4 py-3">

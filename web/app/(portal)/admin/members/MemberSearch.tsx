@@ -1,23 +1,23 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 export default function MemberSearch({
   initialQ,
-  initialActive,
+  initialSuspended,
 }: {
   initialQ?: string
-  initialActive?: string
+  initialSuspended?: string
 }) {
   const router = useRouter()
   const [q, setQ] = useState(initialQ ?? '')
-  const [active, setActive] = useState(initialActive ?? '')
+  const [suspended, setSuspended] = useState(initialSuspended ?? '')
 
   function apply() {
     const params = new URLSearchParams()
     if (q) params.set('q', q)
-    if (active) params.set('active', active)
+    if (suspended) params.set('suspended', suspended)
     router.push(`/admin/members?${params}`)
   }
 
@@ -32,13 +32,13 @@ export default function MemberSearch({
         className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
       />
       <select
-        value={active}
-        onChange={e => { setActive(e.target.value); }}
+        value={suspended}
+        onChange={e => setSuspended(e.target.value)}
         className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
       >
         <option value="">All</option>
-        <option value="true">Active</option>
-        <option value="false">Inactive</option>
+        <option value="false">Active</option>
+        <option value="true">Suspended</option>
       </select>
       <button
         onClick={apply}

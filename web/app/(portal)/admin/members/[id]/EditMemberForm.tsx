@@ -13,7 +13,7 @@ interface Member {
   alt_phone: string | null
   access_level: string
   status: string
-  is_active: boolean
+  suspended: boolean
   committee: boolean
   does_not_book: boolean
   joined: string | null
@@ -29,7 +29,7 @@ export default function EditMemberForm({ member }: { member: Member }) {
     alt_phone: member.alt_phone ?? '',
     access_level: member.access_level,
     status: member.status ?? 'Active',
-    is_active: member.is_active,
+    suspended: member.suspended ?? false,
     committee: member.committee ?? false,
     does_not_book: member.does_not_book ?? false,
     joined: member.joined ?? new Date().toISOString().split('T')[0],
@@ -162,8 +162,8 @@ export default function EditMemberForm({ member }: { member: Member }) {
 
         <div className="flex flex-wrap gap-6">
           <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
-            <input type="checkbox" checked={form.is_active} onChange={set('is_active')} className="w-4 h-4" />
-            Active (can log in)
+            <input type="checkbox" checked={form.suspended} onChange={set('suspended')} className="w-4 h-4" />
+            Suspended
           </label>
           <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
             <input type="checkbox" checked={form.committee} onChange={set('committee')} className="w-4 h-4" />

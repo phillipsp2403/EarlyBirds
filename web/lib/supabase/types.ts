@@ -276,7 +276,6 @@ export type Database = {
           first_tee_count: number
           games_played: number
           id: string
-          is_active: boolean
           joined: string
           last_booker_date: string | null
           last_name: string
@@ -284,6 +283,7 @@ export type Database = {
           member_number: string
           phone: string | null
           status: string
+          suspended: boolean
           tenth_tee_count: number
           times_as_booker: number
         }
@@ -298,7 +298,6 @@ export type Database = {
           first_tee_count?: number
           games_played?: number
           id: string
-          is_active?: boolean
           joined?: string
           last_booker_date?: string | null
           last_name: string
@@ -306,6 +305,7 @@ export type Database = {
           member_number: string
           phone?: string | null
           status?: string
+          suspended?: boolean
           tenth_tee_count?: number
           times_as_booker?: number
         }
@@ -320,7 +320,6 @@ export type Database = {
           first_tee_count?: number
           games_played?: number
           id?: string
-          is_active?: boolean
           joined?: string
           last_booker_date?: string | null
           last_name?: string
@@ -328,6 +327,7 @@ export type Database = {
           member_number?: string
           phone?: string | null
           status?: string
+          suspended?: boolean
           tenth_tee_count?: number
           times_as_booker?: number
         }
