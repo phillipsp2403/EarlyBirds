@@ -27,11 +27,11 @@ export async function POST(
   // Load registered members
   const { data: registrations } = await supabase
     .from('red_book')
-    .select('member_id, members(id, first_name, last_name, games_played, times_as_booker, last_booker_date, first_tee_count, tenth_tee_count, is_active)')
+    .select('member_id, members(id, first_name, last_name, games_played, times_as_booker, last_booker_date, first_tee_count, tenth_tee_count, is_active, does_not_book)')
     .eq('event_id', eventId)
 
   const members = (registrations ?? [])
-    .map(r => r.members as { id: string; first_name: string; last_name: string; games_played: number; times_as_booker: number; last_booker_date: string | null; first_tee_count: number; tenth_tee_count: number; is_active: boolean } | null)
+    .map(r => r.members as { id: string; first_name: string; last_name: string; games_played: number; times_as_booker: number; last_booker_date: string | null; first_tee_count: number; tenth_tee_count: number; is_active: boolean; does_not_book: boolean } | null)
     .filter((m): m is NonNullable<typeof m> => m !== null && m.is_active)
 
   if (members.length < 3) {

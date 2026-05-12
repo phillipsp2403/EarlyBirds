@@ -37,7 +37,7 @@ export default function NavBar({ member }: Props) {
           <Link href="/documents" className="text-sm hover:text-green-200">Documents</Link>
           {isAdmin && (
             <Link href="/admin/members" className="text-sm hover:text-green-200 text-yellow-300">
-              Admin
+              Members
             </Link>
           )}
         </div>

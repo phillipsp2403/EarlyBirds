@@ -10,7 +10,7 @@ interface MemberProfile {
   last_name: string
   email: string
   phone: string | null
-  mobile: string | null
+  alt_phone: string | null
   access_level: string
   games_played: number
   times_as_booker: number
@@ -20,7 +20,7 @@ export default function ProfilePage() {
   const supabase = createClient()
   const [profile, setProfile] = useState<MemberProfile | null>(null)
   const [phone, setPhone] = useState('')
-  const [mobile, setMobile] = useState('')
+  const [altPhone, setAltPhone] = useState('')
   const [saveMsg, setSaveMsg] = useState('')
 
   const [currentPin, setCurrentPin] = useState('')
@@ -41,7 +41,7 @@ export default function ProfilePage() {
           if (data) {
             setProfile(data as MemberProfile)
             setPhone(data.phone ?? '')
-            setMobile(data.mobile ?? '')
+            setAltPhone(data.alt_phone ?? '')
           }
         })
     })
@@ -53,7 +53,7 @@ export default function ProfilePage() {
     if (!user) return
     const { error } = await supabase
       .from('members')
-      .update({ phone, mobile })
+      .update({ phone, alt_phone: altPhone })
       .eq('id', user.id)
     setSaveMsg(error ? 'Failed to save.' : 'Saved!')
     setTimeout(() => setSaveMsg(''), 3000)
@@ -73,7 +73,7 @@ export default function ProfilePage() {
       return
     }
 
-    // Verify current PIN by re-authenticating
+    // Verify current PIN by re-authenticating using login_name (email)
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -111,7 +111,6 @@ export default function ProfilePage() {
         <h2 className="font-semibold text-gray-800">Account details</h2>
         <dl className="text-sm text-gray-700 space-y-1">
           <div className="flex gap-2"><dt className="text-gray-500 w-28">Name</dt><dd>{profile.first_name} {profile.last_name}</dd></div>
-          <div className="flex gap-2"><dt className="text-gray-500 w-28">Login name</dt><dd>{profile.login_name}</dd></div>
           <div className="flex gap-2"><dt className="text-gray-500 w-28">Email</dt><dd>{profile.email}</dd></div>
           <div className="flex gap-2"><dt className="text-gray-500 w-28">Games played</dt><dd>{profile.games_played}</dd></div>
           <div className="flex gap-2"><dt className="text-gray-500 w-28">Times booker</dt><dd>{profile.times_as_booker}</dd></div>
@@ -131,11 +130,11 @@ export default function ProfilePage() {
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Mobile</label>
+            <label className="block text-xs text-gray-500 mb-1">Alt phone</label>
             <input
               type="tel"
-              value={mobile}
-              onChange={e => setMobile(e.target.value)}
+              value={altPhone}
+              onChange={e => setAltPhone(e.target.value)}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
             />
           </div>

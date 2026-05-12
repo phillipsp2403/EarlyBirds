@@ -7,6 +7,7 @@ export interface DrawMember {
   last_booker_date: string | null
   first_tee_count: number
   tenth_tee_count: number
+  does_not_book: boolean
 }
 
 export interface DrawPartnerHistory {
@@ -108,12 +109,16 @@ export function generateDraw(input: AlgorithmInput): DrawGroup[] {
     numGroups = Math.max(1, Math.floor(n / Math.ceil(n / numGroups)))
   }
 
-  // Sort members by booker score (ascending = most due first)
-  const sorted = [...members].sort((a, b) => bookerScore(a, today) - bookerScore(b, today))
+  // Members who do not book are never assigned as booker
+  const eligibleBookers = members.filter(m => !m.does_not_book)
+  const forcedNonBookers = members.filter(m => m.does_not_book).map(m => m.id)
+
+  // Sort eligible bookers by score (ascending = most due first)
+  const sorted = [...eligibleBookers].sort((a, b) => bookerScore(a, today) - bookerScore(b, today))
 
   // Assign bookers — one per group (most due first)
   const bookers = sorted.slice(0, numGroups).map(m => m.id)
-  const nonBookers = sorted.slice(numGroups).map(m => m.id)
+  const nonBookers = [...sorted.slice(numGroups).map(m => m.id), ...forcedNonBookers]
 
   // Distribute non-bookers to minimise playing partner repeats
   // Start with a random shuffle then do a greedy local swap improvement

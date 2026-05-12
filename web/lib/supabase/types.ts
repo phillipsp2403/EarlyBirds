@@ -267,55 +267,67 @@ export type Database = {
       members: {
         Row: {
           access_level: Database["public"]["Enums"]["access_level_enum"]
+          alt_phone: string | null
+          committee: boolean
           created_at: string
+          does_not_book: boolean
           email: string
           first_name: string
           first_tee_count: number
           games_played: number
           id: string
           is_active: boolean
+          joined: string
           last_booker_date: string | null
           last_name: string
           login_name: string
           member_number: string
-          mobile: string | null
           phone: string | null
+          status: string
           tenth_tee_count: number
           times_as_booker: number
         }
         Insert: {
           access_level?: Database["public"]["Enums"]["access_level_enum"]
+          alt_phone?: string | null
+          committee?: boolean
           created_at?: string
+          does_not_book?: boolean
           email: string
           first_name: string
           first_tee_count?: number
           games_played?: number
           id: string
           is_active?: boolean
+          joined?: string
           last_booker_date?: string | null
           last_name: string
           login_name: string
           member_number: string
-          mobile?: string | null
           phone?: string | null
+          status?: string
           tenth_tee_count?: number
           times_as_booker?: number
         }
         Update: {
           access_level?: Database["public"]["Enums"]["access_level_enum"]
+          alt_phone?: string | null
+          committee?: boolean
           created_at?: string
+          does_not_book?: boolean
           email?: string
           first_name?: string
           first_tee_count?: number
           games_played?: number
           id?: string
           is_active?: boolean
+          joined?: string
           last_booker_date?: string | null
           last_name?: string
           login_name?: string
           member_number?: string
-          mobile?: string | null
           phone?: string | null
+          status?: string
           tenth_tee_count?: number
           times_as_booker?: number
         }

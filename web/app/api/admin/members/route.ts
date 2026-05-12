@@ -20,13 +20,16 @@ export async function POST(request: NextRequest) {
   const body = await request.json()
   const {
     member_number,
-    login_name,
     first_name,
     last_name,
     email,
     phone,
-    mobile,
+    alt_phone,
     access_level,
+    status,
+    committee,
+    does_not_book,
+    joined,
     initial_pin,
   } = body
 
@@ -36,7 +39,7 @@ export async function POST(request: NextRequest) {
 
   const service = await createServiceClient()
 
-  // Create the auth user with email + PIN as password
+  // Create the auth user — login_name is always the email address
   const { data: authData, error: authError } = await service.auth.admin.createUser({
     email,
     password: initial_pin,
@@ -48,23 +51,25 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: authError?.message ?? 'Failed to create user' }, { status: 400 })
   }
 
-  // Insert member profile
   const { error: memberError } = await service
     .from('members')
     .insert({
       id: authData.user.id,
       member_number,
-      login_name,
+      login_name: email,
       first_name,
       last_name,
       email,
       phone: phone || null,
-      mobile: mobile || null,
+      alt_phone: alt_phone || null,
       access_level,
+      status: status || 'Active',
+      committee: committee ?? false,
+      does_not_book: does_not_book ?? false,
+      joined: joined || new Date().toISOString().split('T')[0],
     })
 
   if (memberError) {
-    // Clean up orphaned auth user
     await service.auth.admin.deleteUser(authData.user.id)
     return NextResponse.json({ error: memberError.message }, { status: 400 })
   }

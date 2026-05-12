@@ -18,18 +18,33 @@ export async function PATCH(
 
   const { id } = await params
   const body = await request.json()
-  const { first_name, last_name, email, phone, mobile, access_level, is_active } = body
+  const {
+    first_name, last_name, email, phone, alt_phone,
+    access_level, status, is_active, committee, does_not_book, joined,
+  } = body
 
   const service = await createServiceClient()
 
   const { error } = await service
     .from('members')
-    .update({ first_name, last_name, email, phone: phone || null, mobile: mobile || null, access_level, is_active })
+    .update({
+      first_name,
+      last_name,
+      email,
+      login_name: email,
+      phone: phone || null,
+      alt_phone: alt_phone || null,
+      access_level,
+      status,
+      is_active,
+      committee,
+      does_not_book,
+      joined,
+    })
     .eq('id', id)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
 
-  // Update email in auth.users if changed
   if (email) {
     await service.auth.admin.updateUserById(id, { email })
   }
